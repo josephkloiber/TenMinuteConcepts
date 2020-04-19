@@ -173,32 +173,3 @@ plt.plot(ls_pi_est_var, 'k', label="Latin Square Variance")
 plt.legend(loc='upper right')
 ################################################################################
 plt.show()
-
-# num_bins = 100
-# plt.figure()
-# plt.title("Esitmates Histogram")
-# n, bins, patches = plt.hist(mc_pi_estimates, num_bins, facecolor='blue', label="Monte Carlo")
-# n, bins, patches = plt.hist(ls_pi_estimates, num_bins, facecolor='black', label="Latin Square")
-# plt.legend(loc='lower left')
-# plt.show()
-
-################################################################################
-# mc_pi_est_var = []
-# ls_pi_est_var = []
-
-# for count in range(1, len(mc_pi_estimates)):
-    # mc_pi_est_var.append(np.var(mc_pi_estimates[0:count]))
-
-# for count in range(1, len(ls_pi_estimates)):
-    # mc_pi_est_var.append(np.var(mc_pi_estimates[0:count]))
-    # ls_pi_est_var.append(np.var(ls_pi_estimates[0:count]))
- 
-# plt.figure()
-# plt.xlabel("Sample Count")
-# plt.ylabel("Variance")
-# plt.title("Variance as a Function of Sample Count")
-# plt.plot(mc_pi_est_var, label="Monte Carlo Variance")
-# plt.plot(ls_pi_est_var, 'k', label="Latin Square Variance")
-# plt.legend(loc='upper right')
-# plt.show()
-################################################################################
