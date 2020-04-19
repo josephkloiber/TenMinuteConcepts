@@ -44,57 +44,135 @@ def count_encricled_points(levels, points):
 samples = 1000
 radius = 4
 
-# set of the figure
-#plt.figure()
-#plt.xlim(-radius, radius)
-#plt.ylim(-radius, radius)
-#plt.title("1000 Random Samples Using Latin Square Sampling")
-#plt.xlabel("Width")
-#plt.ylabel("Height")
-#plt.axis('equal')
+mc_points = []
+mc_pi_est_var = []
+ls_pi_est_var = []
+
+square_points = populate_square(radius)
+circle_points = popluate_circle(radius)
 
 ################################################################################
 # Build and show the Monte Carlo points
-#mc_points = monte_carlo_points_2d(samples, radius)
-#plt.plot(mc_points[:,0], mc_points[:,1], 'bo', label='Monte Carlo')
+
+plt.figure(1)
+plt.xlim(-radius, radius)
+plt.ylim(-radius, radius)
+plt.title("1000 Random Samples Monte Carlo Sampling")
+plt.xlabel("Width")
+plt.ylabel("Height")
+plt.axis('equal')
+
+mc_points = monte_carlo_points_2d(samples, radius)
+plt.plot(mc_points[:,0], mc_points[:,1], 'bo', label='Monte Carlo')
+plt.plot(square_points[:,0], square_points[:,1], 'r-', linewidth=5)
+plt.plot(circle_points[:,0], circle_points[:,1], 'g-', linewidth=5)
 ################################################################################
 
 ################################################################################
-#plt.figure()
-#plt.title("Monte Carlo Pi Estimates Over Increasing Sample Count")
-#plt.ylim(0, 4)
-#plt.xlabel("Sample Count")
-#plt.ylabel("Esitmate")
+# Build and show the latin square points
+
+plt.figure(2)
+plt.xlim(-radius, radius)
+plt.ylim(-radius, radius)
+plt.title("1000 Random Samples Latin Square Sampling")
+plt.xlabel("Width")
+plt.ylabel("Height")
+plt.axis('equal')
+
+mc_points = monte_carlo_points_2d(samples, radius)
+plt.plot(mc_points[:,0], mc_points[:,1], 'ko', label='Monte Carlo')
+plt.plot(square_points[:,0], square_points[:,1], 'r-', linewidth=5)
+plt.plot(circle_points[:,0], circle_points[:,1], 'g-', linewidth=5)
+################################################################################
+
+################################################################################
+# Let sample count increase and estimate pi each time using MC
+
+plt.figure(3)
+plt.title("Monte Carlo Pi Estimates Over Increasing Sample Count")
+plt.ylim(0, 4)
+plt.xlabel("Sample Count")
+plt.ylabel("Esitmate")
 mc_pi_estimates = []
 for count in range(1,1001):
     mc_points = monte_carlo_points_2d(count, 1)
     mc_pi_estimates.append(4* count_encricled_points(count, mc_points) / count)
-#plt.plot(mc_pi_estimates, label='Estimate of Pi')
-#fred = np.zeros([2, 2])
-#fred[0] = ([0, np.pi])
-#fred[1] = ([1001, np.pi])
-#plt.legend(loc='lower left')
-#plt.plot(fred[:,0], fred[:,1], 'r-', label='Pi Truth')
+    mc_pi_est_var.append(np.var(mc_pi_estimates[0:count]))
+plt.plot(mc_pi_estimates, label='Estimate of Pi')
+truth = np.zeros([2, 2])
+truth[0] = ([0, np.pi])
+truth[1] = ([1001, np.pi])
+plt.legend(loc='lower left')
+plt.plot(truth[:,0], truth[:,1], 'r-', label='Pi Truth')
 ################################################################################
 
 ################################################################################
-# plt.figure()
-# plt.title("Monte Carlo / Latin Square Pi Estimates Overlay")
-# plt.ylim(0, 4)
-# plt.xlabel("Sample Count")
-# plt.ylabel("Esitmate")
+# Let sample count increase and estimate pi each time using LS
+
+plt.figure(4)
+plt.title("Latin Square Pi Estimates Over Increasing Sample Count")
+plt.ylim(0, 4)
+plt.xlabel("Sample Count")
+plt.ylabel("Esitmate")
 ls_pi_estimates = []
 for count in range(1,1001):
     ls_points = latin_square_points_2d(count, 1)
     ls_pi_estimates.append(4* count_encricled_points(count, ls_points) / count)
-# plt.plot(mc_pi_estimates, label='MC Estimate of Pi')
-# plt.plot(ls_pi_estimates, 'k', label='LS Estimate of Pi')
-# fred = np.zeros([2, 2])
-# fred[0] = ([0, np.pi])
-# fred[1] = ([1001, np.pi])
-# plt.legend(loc='lower left')
-# plt.plot(fred[:,0], fred[:,1], 'r-', label='Pi Truth')
+    ls_pi_est_var.append(np.var(ls_pi_estimates[0:count]))
+plt.plot(ls_pi_estimates, 'k', label='Estimate of Pi')
+truth = np.zeros([2, 2])
+truth[0] = ([0, np.pi])
+truth[1] = ([1001, np.pi])
+plt.legend(loc='lower left')
+plt.plot(truth[:,0], truth[:,1], 'r-', label='Pi Truth')
 ################################################################################
+
+################################################################################
+# Let sample count increase and estimate pi each time using LS
+
+plt.figure(5)
+plt.title("Monte Carlo / Latin Square Pi Estimates Overlay")
+plt.ylim(0, 4)
+plt.xlabel("Sample Count")
+plt.ylabel("Esitmate")
+plt.plot(mc_pi_estimates, label='MC Estimate of Pi')
+plt.plot(ls_pi_estimates, 'k', label='LS Estimate of Pi')
+truth = np.zeros([2, 2])
+truth[0] = ([0, np.pi])
+truth[1] = ([1001, np.pi])
+plt.legend(loc='lower left')
+plt.plot(truth[:,0], truth[:,1], 'r-', label='Pi Truth')
+################################################################################
+
+################################################################################
+plt.figure(6)
+plt.xlabel("Sample Count")
+plt.ylabel("Variance")
+plt.title("Variance as a Function of Sample Count - Monte Carlo")
+plt.plot(mc_pi_est_var, label="Monte Carlo Variance")
+# plt.plot(ls_pi_est_var, 'k', label="Latin Square Variance")
+plt.legend(loc='upper right')
+################################################################################
+
+################################################################################
+plt.figure(7)
+plt.xlabel("Sample Count")
+plt.ylabel("Variance")
+plt.title("Variance as a Function of Sample Count - LatinSquare")
+plt.plot(ls_pi_est_var, 'k', label="Latin Square Variance")
+plt.legend(loc='upper right')
+################################################################################
+
+################################################################################
+plt.figure(8)
+plt.xlabel("Sample Count")
+plt.ylabel("Variance")
+plt.title("Variance as a Function of Sample Count - Monte Carlo")
+plt.plot(mc_pi_est_var, label="Monte Carlo Variance")
+plt.plot(ls_pi_est_var, 'k', label="Latin Square Variance")
+plt.legend(loc='upper right')
+################################################################################
+plt.show()
 
 # num_bins = 100
 # plt.figure()
@@ -105,42 +183,22 @@ for count in range(1,1001):
 # plt.show()
 
 ################################################################################
-mc_pi_est_var = []
-ls_pi_est_var = []
+# mc_pi_est_var = []
+# ls_pi_est_var = []
 
-for count in range(1, len(mc_pi_estimates)):
-    mc_pi_est_var.append(np.var(mc_pi_estimates[0:count]))
+# for count in range(1, len(mc_pi_estimates)):
+    # mc_pi_est_var.append(np.var(mc_pi_estimates[0:count]))
 
-for count in range(1, len(ls_pi_estimates)):
-    ls_pi_est_var.append(np.var(ls_pi_estimates[0:count]))
+# for count in range(1, len(ls_pi_estimates)):
+    # mc_pi_est_var.append(np.var(mc_pi_estimates[0:count]))
+    # ls_pi_est_var.append(np.var(ls_pi_estimates[0:count]))
  
-plt.figure()
-plt.xlabel("Sample Count")
-plt.ylabel("Variance")
-plt.title("Variance as a Function of Sample Count")
-plt.plot(mc_pi_est_var, label="Monte Carlo Variance")
-plt.plot(ls_pi_est_var, 'k', label="Latin Square Variance")
-plt.legend(loc='upper right')
-plt.show()
+# plt.figure()
+# plt.xlabel("Sample Count")
+# plt.ylabel("Variance")
+# plt.title("Variance as a Function of Sample Count")
+# plt.plot(mc_pi_est_var, label="Monte Carlo Variance")
+# plt.plot(ls_pi_est_var, 'k', label="Latin Square Variance")
+# plt.legend(loc='upper right')
+# plt.show()
 ################################################################################
-
-
-################################################################################
-# Build and show the Latin Square points
-#ls_points = latin_square_points_2d(samples, radius)
-#plt.plot(ls_points[:,0], ls_points[:,1], 'ko', label='Latin Square')
-################################################################################
-
-################################################################################
-# Build and show the square
-#square_points = populate_square(radius)
-#plt.plot(square_points[:,0], square_points[:,1], 'r-', linewidth=5)
-################################################################################
-
-################################################################################
-# Build and show the circle
-#circle_points = popluate_circle(radius)
-#plt.plot(circle_points[:,0], circle_points[:,1], 'g-', linewidth=5)
-################################################################################
-
-plt.show()
