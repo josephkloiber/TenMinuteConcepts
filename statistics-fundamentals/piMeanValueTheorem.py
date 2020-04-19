@@ -44,7 +44,13 @@ plt.title("Distribution of Arithmetic Means")
 plt.hist(meansPerDice, 50, facecolor='purple')
 
 # plot the estimated normal curve
-# plt.figure(4)
+plt.figure(4)
+
+x = []
+start = 3000
+for i in range(start,start + 2000):
+    x.append(start + s
+
 # mom = np.average(meansPerDice) # Mean Of Means
 # som = np.sqrt(np.var(meansPerDice)) # Std. Dev of Means
 # truthNormal=[]
