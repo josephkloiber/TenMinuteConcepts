@@ -36,17 +36,30 @@ def latin_square_points_2d(levels, radius):
          points[level] = [bgn+x_file[level]*pitch, bgn+y_rank[level]*pitch]
     return points
 
-def count_encricled_points(levels, points):
+def get_encircled_points(points):
+    for i in range(np.size(points[:,0])):
+        magnitude=np.sqrt(np.power(points[i,0], 2)+np.power(points[i,1], 2))
+        if(magnitude <= 1):
+            circled_x.append( [points[i,0] )
+            circled_y.append( [points[i,1] )
+    return
+
+def count_encircled_points(points):
     magnitude=np.power(np.power(points[:,0], 2) + np.power(points[:,1], 2), 0.5)
     return np.size(np.where(magnitude <= 1))
 
 # set the geometrical bounds the example
-samples = 1000
+samples = 1001
 radius = 4
+
+save_image = 1
 
 mc_points = []
 mc_pi_est_var = []
 ls_pi_est_var = []
+
+circled_x = []
+circled_y = []
 
 square_points = populate_square(radius)
 circle_points = popluate_circle(radius)
@@ -66,6 +79,23 @@ mc_points = monte_carlo_points_2d(samples, radius)
 plt.plot(mc_points[:,0], mc_points[:,1], 'bo', label='Monte Carlo')
 plt.plot(square_points[:,0], square_points[:,1], 'r-', linewidth=5)
 plt.plot(circle_points[:,0], circle_points[:,1], 'g-', linewidth=5)
+if(save_image != 0):
+    plt.savefig('./images/monte_carlo_points.png')
+
+get_encircled_points(mc_points)
+plt.figure(9)
+plt.xlim(-radius, radius)
+plt.ylim(-radius, radius)
+plt.title("1000 Random Samples Monte Carlo Sampling")
+plt.xlabel("Width")
+plt.ylabel("Height")
+plt.axis('equal')
+plt.plot(mc_points[:,0], mc_points[:,1], 'bo', label='Monte Carlo')
+plt.plot(circled_x, circled_y, 'ko' )
+plt.plot(square_points[:,0], square_points[:,1], 'r-', linewidth=5)
+plt.plot(circle_points[:,0], circle_points[:,1], 'g-', linewidth=5)
+plt.show()
+exit(0)
 ################################################################################
 
 ################################################################################
@@ -83,6 +113,8 @@ mc_points = monte_carlo_points_2d(samples, radius)
 plt.plot(mc_points[:,0], mc_points[:,1], 'ko', label='Monte Carlo')
 plt.plot(square_points[:,0], square_points[:,1], 'r-', linewidth=5)
 plt.plot(circle_points[:,0], circle_points[:,1], 'g-', linewidth=5)
+if(save_image != 0):
+    plt.savefig('./images/latin_sqaure_points.png')
 ################################################################################
 
 ################################################################################
@@ -94,16 +126,18 @@ plt.ylim(0, 4)
 plt.xlabel("Sample Count")
 plt.ylabel("Esitmate")
 mc_pi_estimates = []
-for count in range(1,1001):
+for count in range(1,samples):
     mc_points = monte_carlo_points_2d(count, 1)
-    mc_pi_estimates.append(4* count_encricled_points(count, mc_points) / count)
+    mc_pi_estimates.append(4* count_encircled_points(mc_points) / count)
     mc_pi_est_var.append(np.var(mc_pi_estimates[0:count]))
 plt.plot(mc_pi_estimates, label='Estimate of Pi')
 truth = np.zeros([2, 2])
 truth[0] = ([0, np.pi])
-truth[1] = ([1001, np.pi])
+truth[1] = ([samples, np.pi])
 plt.legend(loc='lower left')
 plt.plot(truth[:,0], truth[:,1], 'r-', label='Pi Truth')
+if(save_image != 0):
+    plt.savefig('./images/monte_carlo_estimate.png')
 ################################################################################
 
 ################################################################################
@@ -115,20 +149,22 @@ plt.ylim(0, 4)
 plt.xlabel("Sample Count")
 plt.ylabel("Esitmate")
 ls_pi_estimates = []
-for count in range(1,1001):
+for count in range(1,samples):
     ls_points = latin_square_points_2d(count, 1)
-    ls_pi_estimates.append(4* count_encricled_points(count, ls_points) / count)
+    ls_pi_estimates.append(4* count_encircled_points(ls_points) / count)
     ls_pi_est_var.append(np.var(ls_pi_estimates[0:count]))
 plt.plot(ls_pi_estimates, 'k', label='Estimate of Pi')
 truth = np.zeros([2, 2])
 truth[0] = ([0, np.pi])
-truth[1] = ([1001, np.pi])
+truth[1] = ([samples, np.pi])
 plt.legend(loc='lower left')
 plt.plot(truth[:,0], truth[:,1], 'r-', label='Pi Truth')
+if(save_image != 0):
+    plt.savefig('./images/latin_square_estimate.png')
 ################################################################################
 
 ################################################################################
-# Let sample count increase and estimate pi each time using LS
+# Compare the variances of the two methods
 
 plt.figure(5)
 plt.title("Monte Carlo / Latin Square Pi Estimates Overlay")
@@ -139,9 +175,11 @@ plt.plot(mc_pi_estimates, label='MC Estimate of Pi')
 plt.plot(ls_pi_estimates, 'k', label='LS Estimate of Pi')
 truth = np.zeros([2, 2])
 truth[0] = ([0, np.pi])
-truth[1] = ([1001, np.pi])
+truth[1] = ([samples, np.pi])
 plt.legend(loc='lower left')
 plt.plot(truth[:,0], truth[:,1], 'r-', label='Pi Truth')
+if(save_image != 0):
+    plt.savefig('./images/mc_ls_estimate.png')
 ################################################################################
 
 ################################################################################
@@ -150,8 +188,9 @@ plt.xlabel("Sample Count")
 plt.ylabel("Variance")
 plt.title("Variance as a Function of Sample Count - Monte Carlo")
 plt.plot(mc_pi_est_var, label="Monte Carlo Variance")
-# plt.plot(ls_pi_est_var, 'k', label="Latin Square Variance")
 plt.legend(loc='upper right')
+if(save_image != 0):
+    plt.savefig('./images/mc_variance.png')
 ################################################################################
 
 ################################################################################
@@ -161,6 +200,8 @@ plt.ylabel("Variance")
 plt.title("Variance as a Function of Sample Count - LatinSquare")
 plt.plot(ls_pi_est_var, 'k', label="Latin Square Variance")
 plt.legend(loc='upper right')
+if(save_image != 0):
+    plt.savefig('./images/ls_variance.png')
 ################################################################################
 
 ################################################################################
@@ -171,5 +212,7 @@ plt.title("Variance as a Function of Sample Count - Monte Carlo")
 plt.plot(mc_pi_est_var, label="Monte Carlo Variance")
 plt.plot(ls_pi_est_var, 'k', label="Latin Square Variance")
 plt.legend(loc='upper right')
+if(save_image != 0):
+    plt.savefig('./images/mc_ls_variance.png')
 ################################################################################
 plt.show()
