@@ -21,4 +21,4 @@ that are not analytically tractable.  However, for the purposes of this
 demonstration, a tractable problem is presented so as to place emphasis on the
 methods without becoming distracted by the particular application.
 
-![Monte Carlo Samples](./monte_carlo_points.png)
+![Monte Carlo Samples](./images/monte_carlo_points.png)
