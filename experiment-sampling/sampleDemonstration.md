@@ -9,6 +9,6 @@ variance reduction available.  This article demonstrates the advantages of
 an alternative method.
 
 ## The challenge
-Estimate the value of _&pi using two different sampling methods:
+Estimate the value of &pi using two different sampling methods:
 + Monte Carlo
 + Latin Square
