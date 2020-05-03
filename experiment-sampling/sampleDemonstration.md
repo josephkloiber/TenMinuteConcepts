@@ -1,8 +1,3 @@
-<script type="text/javascript" async
-src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?
-config=TeX-MML-AM_CHTML"
-</script>
-
 # Monte Carlo Versus Latin Square Sampling
 
 ## Introduction
@@ -14,6 +9,6 @@ variance reduction available.  This article demonstrates the advantages of
 an alternative method.
 
 ## The challenge
-Estimate the value of $\pi$ using two different sampling methods:
+Estimate the value of \pi using two different sampling methods:
 + Monte Carlo
 + Latin Square
