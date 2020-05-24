@@ -37,6 +37,8 @@ def latin_square_points_2d(levels, radius):
     return points
 
 def get_encircled_points(points, radius):
+    del circled_x[:]
+    del circled_y[:]
     for i in range(np.size(points[:,0])):
         magnitude=np.sqrt(np.power(points[i,0], 2)+np.power(points[i,1], 2))
         if(magnitude <= radius):
@@ -48,13 +50,24 @@ def count_encircled_points(points):
     magnitude=np.power(np.power(points[:,0], 2) + np.power(points[:,1], 2), 0.5)
     return np.size(np.where(magnitude <= 1))
 
+def plot_configuration(index, radius, title):
+    plt.figure(index)
+    plt.xlim(-radius, radius)
+    plt.ylim(-radius, radius)
+    plt.title(title)
+    plt.xlabel("Width")
+    plt.ylabel("Height")
+    plt.axis('equal')
+    
+
 # set the geometrical bounds the example
 samples = 1001
-radius = 10
+radius = 1
 
 save_image = 0
 
 mc_points = []
+ls_points = []
 mc_pi_est_var = []
 ls_pi_est_var = []
 
@@ -67,13 +80,7 @@ circle_points = popluate_circle(radius)
 ################################################################################
 # Build and show the Monte Carlo points
 
-plt.figure(1)
-plt.xlim(-radius, radius)
-plt.ylim(-radius, radius)
-plt.title("1000 Random Samples Monte Carlo Sampling")
-plt.xlabel("Width")
-plt.ylabel("Height")
-plt.axis('equal')
+plot_configuration(1, radius, "1000 Random Samples Monte Carlo Sampling")
 
 mc_points = monte_carlo_points_2d(samples, radius)
 plt.plot(mc_points[:,0], mc_points[:,1], 'bo', label='Monte Carlo')
@@ -83,34 +90,21 @@ if(save_image != 0):
     plt.savefig('./images/monte_carlo_points.png')
 
 get_encircled_points(mc_points, radius)
-plt.figure(9)
-plt.xlim(-radius, radius)
-plt.ylim(-radius, radius)
-plt.title("1000 Random Samples Monte Carlo Sampling")
-plt.xlabel("Width")
-plt.ylabel("Height")
-plt.axis('equal')
-plt.plot(mc_points[:,0], mc_points[:,1], 'bo', label='Monte Carlo')
 plt.plot(circled_x, circled_y, 'ko' )
 plt.plot(square_points[:,0], square_points[:,1], 'r-', linewidth=5)
 plt.plot(circle_points[:,0], circle_points[:,1], 'g-', linewidth=5)
-plt.show()
-exit(0)
 ################################################################################
 
 ################################################################################
 # Build and show the latin square points
 
-plt.figure(2)
-plt.xlim(-radius, radius)
-plt.ylim(-radius, radius)
-plt.title("1000 Random Samples Latin Square Sampling")
-plt.xlabel("Width")
-plt.ylabel("Height")
-plt.axis('equal')
+plot_configuration(2, radius, "1000 Random Samples Latin Square Sampling")
 
-mc_points = monte_carlo_points_2d(samples, radius)
-plt.plot(mc_points[:,0], mc_points[:,1], 'ko', label='Monte Carlo')
+ls_points = latin_square_points_2d(samples, radius)
+
+plt.plot(ls_points[:,0], ls_points[:,1], 'bo', label='Monte Carlo')
+get_encircled_points(ls_points, radius)
+plt.plot(circled_x, circled_y, 'ko' )
 plt.plot(square_points[:,0], square_points[:,1], 'r-', linewidth=5)
 plt.plot(circle_points[:,0], circle_points[:,1], 'g-', linewidth=5)
 if(save_image != 0):
