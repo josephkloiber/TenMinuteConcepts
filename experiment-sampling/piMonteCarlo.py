@@ -6,6 +6,26 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+################################################################################
+# set the geometrical bounds for the example
+samples = 1001
+radius = 1
+
+save_image = 0
+
+mc_points = []
+mc_pi_est_var = []
+
+ls_points = []
+ls_pi_est_var = []
+
+circled_x = []
+circled_y = []
+
+square_points = []
+circle_points = []
+################################################################################
+
 def popluate_circle(radius):
     points = np.zeros([360,2])
     for step in range(0,360,1):
@@ -58,31 +78,49 @@ def plot_configuration(index, radius, title):
     plt.xlabel("Width")
     plt.ylabel("Height")
     plt.axis('equal')
-    
 
-# set the geometrical bounds the example
-samples = 1001
-radius = 1
+################################################################################
+# 1. Display data 
 
-save_image = 0
-
-mc_points = []
-ls_points = []
-mc_pi_est_var = []
-ls_pi_est_var = []
-
-circled_x = []
-circled_y = []
-
+# 1a. The Square, Circle and Radius
 square_points = populate_square(radius)
 circle_points = popluate_circle(radius)
+radius_plot = np.zeros([2, 2])
+radius_plot[0] = ([0, 0])
+radius_plot[1] = ([radius, 0])
 
+## 1b. Pi Truth Value for plotting
+truth = np.zeros([2, 2])
+truth[0] = ([0, np.pi])
+truth[1] = ([samples, np.pi])
+
+# 2. Build Monte Carlo Samples
+mc_points = monte_carlo_points_2d(samples, radius)
+
+# 3. Build Latin Square Samples
+ls_points = latin_square_points_2d(samples, radius)
+
+# 4. Calculate the Monte Carlo Variances
+mc_pi_estimates = []
+for count in range(1,samples):
+    mc_pi_estimates.append(4* count_encircled_points(mc_points[:count]) / count)
+    mc_pi_est_var.append(np.var(mc_pi_estimates))
+
+# 5. Calculate the Latin Square Variances
+ls_pi_estimates = []
+for count in range(1,samples):
+    ls_pi_estimates.append(4* count_encircled_points(ls_points[:count]) / count)
+    ls_pi_est_var.append(np.var(ls_pi_estimates))
+
+################################################################################
+
+
+    
 ################################################################################
 # Build and show the Monte Carlo points
 
 plot_configuration(1, radius, "1000 Random Samples Monte Carlo Sampling")
 
-mc_points = monte_carlo_points_2d(samples, radius)
 plt.plot(mc_points[:,0], mc_points[:,1], 'bo', label='Monte Carlo')
 plt.plot(square_points[:,0], square_points[:,1], 'r-', linewidth=5)
 plt.plot(circle_points[:,0], circle_points[:,1], 'g-', linewidth=5)
@@ -100,7 +138,6 @@ plt.plot(circle_points[:,0], circle_points[:,1], 'g-', linewidth=5)
 
 plot_configuration(2, radius, "1000 Random Samples Latin Square Sampling")
 
-ls_points = latin_square_points_2d(samples, radius)
 
 plt.plot(ls_points[:,0], ls_points[:,1], 'bo', label='Monte Carlo')
 get_encircled_points(ls_points, radius)
@@ -119,15 +156,7 @@ plt.title("Monte Carlo Pi Estimates Over Increasing Sample Count")
 plt.ylim(0, 4)
 plt.xlabel("Sample Count")
 plt.ylabel("Esitmate")
-mc_pi_estimates = []
-for count in range(1,samples):
-    mc_points = monte_carlo_points_2d(count, 1)
-    mc_pi_estimates.append(4* count_encircled_points(mc_points) / count)
-    mc_pi_est_var.append(np.var(mc_pi_estimates[0:count]))
 plt.plot(mc_pi_estimates, label='Estimate of Pi')
-truth = np.zeros([2, 2])
-truth[0] = ([0, np.pi])
-truth[1] = ([samples, np.pi])
 plt.legend(loc='lower left')
 plt.plot(truth[:,0], truth[:,1], 'r-', label='Pi Truth')
 if(save_image != 0):
@@ -142,15 +171,7 @@ plt.title("Latin Square Pi Estimates Over Increasing Sample Count")
 plt.ylim(0, 4)
 plt.xlabel("Sample Count")
 plt.ylabel("Esitmate")
-ls_pi_estimates = []
-for count in range(1,samples):
-    ls_points = latin_square_points_2d(count, 1)
-    ls_pi_estimates.append(4* count_encircled_points(ls_points) / count)
-    ls_pi_est_var.append(np.var(ls_pi_estimates[0:count]))
 plt.plot(ls_pi_estimates, 'k', label='Estimate of Pi')
-truth = np.zeros([2, 2])
-truth[0] = ([0, np.pi])
-truth[1] = ([samples, np.pi])
 plt.legend(loc='lower left')
 plt.plot(truth[:,0], truth[:,1], 'r-', label='Pi Truth')
 if(save_image != 0):
@@ -167,9 +188,6 @@ plt.xlabel("Sample Count")
 plt.ylabel("Esitmate")
 plt.plot(mc_pi_estimates, label='MC Estimate of Pi')
 plt.plot(ls_pi_estimates, 'k', label='LS Estimate of Pi')
-truth = np.zeros([2, 2])
-truth[0] = ([0, np.pi])
-truth[1] = ([samples, np.pi])
 plt.legend(loc='lower left')
 plt.plot(truth[:,0], truth[:,1], 'r-', label='Pi Truth')
 if(save_image != 0):
