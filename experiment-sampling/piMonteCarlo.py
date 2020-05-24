@@ -36,12 +36,12 @@ def latin_square_points_2d(levels, radius):
          points[level] = [bgn+x_file[level]*pitch, bgn+y_rank[level]*pitch]
     return points
 
-def get_encircled_points(points):
+def get_encircled_points(points, radius):
     for i in range(np.size(points[:,0])):
         magnitude=np.sqrt(np.power(points[i,0], 2)+np.power(points[i,1], 2))
-        if(magnitude <= 1):
-            circled_x.append( [points[i,0] )
-            circled_y.append( [points[i,1] )
+        if(magnitude <= radius):
+            circled_x.append( points[i,0] )
+            circled_y.append( points[i,1] )
     return
 
 def count_encircled_points(points):
@@ -50,9 +50,9 @@ def count_encircled_points(points):
 
 # set the geometrical bounds the example
 samples = 1001
-radius = 4
+radius = 10
 
-save_image = 1
+save_image = 0
 
 mc_points = []
 mc_pi_est_var = []
@@ -82,7 +82,7 @@ plt.plot(circle_points[:,0], circle_points[:,1], 'g-', linewidth=5)
 if(save_image != 0):
     plt.savefig('./images/monte_carlo_points.png')
 
-get_encircled_points(mc_points)
+get_encircled_points(mc_points, radius)
 plt.figure(9)
 plt.xlim(-radius, radius)
 plt.ylim(-radius, radius)
